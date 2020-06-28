@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2020-06-27 22:17:13
- * @LastEditTime: 2020-06-27 22:31:53
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /go-gin-example/pkg/setting/setting.go
- */
 package setting
 
 import (
