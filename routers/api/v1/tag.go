@@ -1,13 +1,13 @@
 package v1
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/EDDYCJY/go-gin-example/models"
 	"github.com/EDDYCJY/go-gin-example/pkg/e"
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/EDDYCJY/go-gin-example/pkg/util"
+	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 	"github.com/unknwon/com"
 )
@@ -34,18 +34,41 @@ func GetTags(c *gin.Context) {
 	data["lists"] = models.GetTags(util.GetPage(c), setting.PageSize, maps)
 	data["total"] = models.GetTagTotal(maps)
 
-	fmt.Println(data)
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  e.GetMsg(code),
 		"data": data,
 	})
-	fmt.Println("a")
 }
 
 //新增文章标签
 func AddTag(c *gin.Context) {
+	name := c.Query("name")
+	state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
+	createdBy := c.Query("created_by")
 
+	valid := validation.Validation{}
+	valid.Required(name, "name").Message("名字不能为空")
+	valid.MaxSize(name, 100, "name").Message("名字最长为100字符")
+	valid.Required(createdBy, "created_by").Message("创建人不能为空")
+	valid.MaxSize(createdBy, 100, "created_by").Message("创建人最长为100字符")
+	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
+
+	code := e.INVALID_PARAMS
+	if !valid.HasErrors() {
+		if !models.ExistTagByName(name) {
+			code = e.SUCCESS
+			models.AddTag(name, state, createdBy)
+		} else {
+			code = e.ERROR_EXIST_TAG
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": code,
+		"mag":  e.GetMsg(code),
+		"data": make(map[string]string),
+	})
 }
 
 //修改文章标签
