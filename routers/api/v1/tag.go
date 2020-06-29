@@ -43,17 +43,17 @@ func GetTags(c *gin.Context) {
 	fmt.Println("a")
 }
 
-//获取多个文章标签
+//新增文章标签
 func AddTag(c *gin.Context) {
 
 }
 
-//获取多个文章标签
-func EdisTag(c *gin.Context) {
+//修改文章标签
+func EditTag(c *gin.Context) {
 
 }
 
-//获取多个文章标签
+//删除文章标签
 func DeleteTag(c *gin.Context) {
 
 }
