@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -111,7 +110,6 @@ func AddArticle(c *gin.Context) {
 			data["content"] = content
 			data["created_by"] = createdBy
 			data["state"] = state
-			fmt.Println("zzz", data)
 			models.AddArticle(data)
 			code = e.SUCCESS
 		} else {
