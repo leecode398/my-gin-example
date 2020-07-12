@@ -1,12 +1,16 @@
 package routers
 
 import (
+	"fmt"
+
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
+	"github.com/EDDYCJY/go-gin-example/routers/api"
 	v1 "github.com/EDDYCJY/go-gin-example/routers/api/v1"
 	"github.com/gin-gonic/gin"
 )
 
 func InitRouter() *gin.Engine {
+	fmt.Println("asd")
 	r := gin.New()
 
 	r.Use(gin.Logger())
@@ -14,6 +18,8 @@ func InitRouter() *gin.Engine {
 	r.Use(gin.Recovery())
 
 	gin.SetMode(setting.RunMode)
+
+	r.GET("/auth", api.GetAuth)
 
 	apiv1 := r.Group("/api/v1")
 	{

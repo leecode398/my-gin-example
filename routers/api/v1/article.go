@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -12,6 +13,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/unknwon/com"
 )
+
+type test struct {
+	ID  int
+	Dss int
+}
 
 //获取单个文章
 func GetArticle(c *gin.Context) {
@@ -75,12 +81,9 @@ func GetArticles(c *gin.Context) {
 			log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
 		}
 	}
+	fmt.Println("articles", code)
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
-	})
+	c.IndentedJSON(http.StatusOK, test{ID: 1, Dss: 2})
 }
 
 //新增文章

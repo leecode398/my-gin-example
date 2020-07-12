@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/EDDYCJY/go-gin-example/models"
@@ -33,11 +34,9 @@ func GetTags(c *gin.Context) {
 
 	data["lists"] = models.GetTags(util.GetPage(c), setting.PageSize, maps)
 	data["total"] = models.GetTagTotal(maps)
-
+	fmt.Println(code)
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
+		"message": "hello",
 	})
 }
 
