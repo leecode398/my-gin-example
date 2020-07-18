@@ -15,6 +15,7 @@ import (
 
 //获取多个文章标签
 func GetTags(c *gin.Context) {
+	fmt.Println("gst article")
 	name := c.Query("name")
 
 	maps := make(map[string]interface{})

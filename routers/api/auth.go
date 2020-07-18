@@ -2,11 +2,11 @@ package api
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/EDDYCJY/go-gin-example/models"
 	"github.com/EDDYCJY/go-gin-example/pkg/e"
+	"github.com/EDDYCJY/go-gin-example/pkg/logging"
 	"github.com/EDDYCJY/go-gin-example/pkg/util"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
@@ -18,7 +18,6 @@ type auth struct {
 }
 
 func GetAuth(c *gin.Context) {
-	fmt.Println("auth")
 	username := c.Query("username")
 	password := c.Query("password")
 
@@ -43,10 +42,11 @@ func GetAuth(c *gin.Context) {
 		}
 	} else {
 		for _, err := range valid.Errors {
-			log.Println(err.Key, err.Message)
+			logging.Info(err.Key, err.Message)
 		}
 	}
 
+	fmt.Println(data)
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  e.GetMsg(code),
