@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"time"
+
+	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 )
 
 var (
@@ -18,6 +20,14 @@ func getLogFilePath() string {
 	return fmt.Sprintf("%s", LogSavePath)
 }
 
+func getLogFileName() string {
+	return fmt.Sprintf("%s%s.%s",
+		setting.AppSetting.LogSaveName,
+		time.Now().Format(setting.AppSetting.TimeFormat),
+		setting.AppSetting.LogFileExt,
+	)
+}
+
 func getLogFileFullPath() string {
 	prefixPath := getLogFilePath()
 	suffixPath := fmt.Sprintf("%s%s.%s", LogSaveName, time.Now().Format(TimeFormat), LogFileExt)
@@ -29,7 +39,7 @@ func openLogFile(filePath string) *os.File {
 	_, err := os.Stat(filePath)
 	switch {
 	case os.IsNotExist(err):
-		mkDir()
+		mkDir(getLogFilePath())
 	case os.IsPermission(err):
 		log.Fatalf("Permission :%v", err)
 	}
@@ -40,7 +50,7 @@ func openLogFile(filePath string) *os.File {
 	return handle
 }
 
-func mkDir() {
+func mkDir(filePath string) {
 	dir, _ := os.Getwd()
 	err := os.MkdirAll(dir+"/"+getLogFilePath(), os.ModePerm)
 	if err != nil {

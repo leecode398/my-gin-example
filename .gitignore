@@ -4,3 +4,6 @@ GRTAGS
 GTAGS
 test.rest
 runtime/logs
+main
+cscope.files
+tags
