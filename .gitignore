@@ -3,7 +3,7 @@ GPATH
 GRTAGS
 GTAGS
 test.rest
-runtime/logs
+runtime/
 main
 cscope.files
 tags
