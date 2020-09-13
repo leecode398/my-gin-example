@@ -3,10 +3,11 @@ package util
 import (
 	"time"
 
+	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/dgrijalva/jwt-go"
 )
 
-var jwtSecret []byte
+var jwtSecret = []byte(setting.AppSetting.JwtSecret)
 
 type Claims struct {
 	Username string `json:"username"`
@@ -19,8 +20,8 @@ func GenerateToken(username, password string) (string, error) {
 	expireTime := nowTime.Add(3 * time.Hour)
 
 	claims := Claims{
-		username,
-		password,
+		EncodeMD5(username),
+		EncodeMD5(password),
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "gin-blog",

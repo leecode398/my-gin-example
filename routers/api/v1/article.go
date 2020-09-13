@@ -92,6 +92,7 @@ func AddArticle(c *gin.Context) {
 	desc := c.Query("desc")
 	content := c.Query("content")
 	createdBy := c.Query("created_by")
+	coverImageUrl := c.PostForm("cover_image_url")
 	state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
 
 	valid := validation.Validation{}
@@ -100,6 +101,7 @@ func AddArticle(c *gin.Context) {
 	valid.Required(desc, "desc").Message("简述不能为空")
 	valid.Required(content, "content").Message("内容不能为空")
 	valid.Required(createdBy, "created_by").Message("创建人不能为空")
+	valid.Required(coverImageUrl, "cover_image_url").Message("封面地址不能为空")
 	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
 
 	code := e.INVALID_PARAMS
@@ -111,6 +113,7 @@ func AddArticle(c *gin.Context) {
 			data["desc"] = desc
 			data["content"] = content
 			data["created_by"] = createdBy
+			data["cover_image_url"] = coverImageUrl
 			data["state"] = state
 
 			models.AddArticle(data)
@@ -140,6 +143,7 @@ func EditArticle(c *gin.Context) {
 	title := c.Query("title")
 	desc := c.Query("desc")
 	content := c.Query("content")
+	coverImageUrl := c.PostForm("cover_image_url")
 	modifiedBy := c.Query("modified_by")
 
 	var state int = -1
@@ -149,10 +153,15 @@ func EditArticle(c *gin.Context) {
 	}
 
 	valid.Min(id, 1, "id").Message("ID必须大于0")
+	valid.Min(tagId, 1, "tag_id").Message("标签ID必须大于0")
 	valid.MaxSize(title, 100, "title").Message("标题最长为100字符")
+	valid.Required(title, "title").Message("标题不能为空")
 	valid.MaxSize(desc, 255, "desc").Message("简述最长为255字符")
+	valid.Required(desc, "desc").Message("简述不能为空")
 	valid.MaxSize(content, 65535, "content").Message("内容最长为65535字符")
 	valid.Required(modifiedBy, "modified_by").Message("修改人不能为空")
+	valid.Required(coverImageUrl, "cover_image_url").Message("封面地址不能为空")
+	valid.MaxSize(coverImageUrl, 255, "cover_image_url").Message("封面地址最长为255字符")
 	valid.MaxSize(modifiedBy, 100, "modified_by").Message("修改人最长为100字符")
 
 	code := e.INVALID_PARAMS
@@ -160,19 +169,11 @@ func EditArticle(c *gin.Context) {
 		if models.ExistArticleByID(id) {
 			if models.ExistTagByID(tagId) {
 				data := make(map[string]interface{})
-				if tagId > 0 {
-					data["tag_id"] = tagId
-				}
-				if title != "" {
-					data["title"] = title
-				}
-				if desc != "" {
-					data["desc"] = desc
-				}
-				if content != "" {
-					data["content"] = content
-				}
-
+				data["tag_id"] = tagId
+				data["title"] = title
+				data["desc"] = desc
+				data["content"] = content
+				data["cover_image_url"] = coverImageUrl
 				data["modified_by"] = modifiedBy
 
 				models.EditArticle(id, data)
